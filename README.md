@@ -2,6 +2,8 @@
 
 Gradle Build Helper is a Visual Studio Code extension that simplifies running Gradle tasks, especially for multi-project Gradle builds. This extension allows you to select and execute tasks interactively through the Command Palette.
 
+![Gradle Build Helper Screenshot](https://raw.githubusercontent.com/hwantage/gradle-build-helper/refs/heads/main/images/screenshot.png)
+
 ---
 
 ## Features

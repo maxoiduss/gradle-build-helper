@@ -1,0 +1,85 @@
+{
+  "name": "gradle-build-helper",
+  "displayName": "gradle-build-helper",
+  "description": "",
+  "version": "1.0.1",
+  "publisher": "hwantage",
+  "engines": {
+    "vscode": "^1.89.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./extension.js",
+  "icon": "images/gradle.256x188.png",
+  "contributes": {
+    "commands": [
+      {
+        "command": "gradlebuild.helper",
+        "title": "Gradle build helper"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "gradle-build-helper",
+      "properties": {
+        "gradle.build.helper.profiles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": ["css", "dev"],
+          "description": "Available gradle profile"
+        },
+        "gradle.build.helper.tasks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "build",
+            "clean build",
+            "clean",
+            "clean build with profile",
+            "appRun"
+          ],
+          "description": "Available Gradle tasks"
+        },
+        "gradle.build.helper.command": {
+          "type": "string",
+          "default": "gradlew",
+          "description": "Default build command"
+        },
+        "gradle.build.helper.isMultiProject": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable multi-project support"
+        },
+        "gradle.build.helper.excludeDirectory": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Directories to exclude (only if multi-project is enabled)",
+          "scope": "resource"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.89.0",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "20.x",
+    "eslint": "^8.57.0",
+    "typescript": "^5.4.5",
+    "@vscode/test-cli": "^0.0.9",
+    "@vscode/test-electron": "^2.4.0"
+  }
+}

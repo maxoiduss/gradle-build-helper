@@ -50,10 +50,12 @@ async function selectDirectory() {
 
 async function executeGradleCommand(directory) {
   const config = vscode.workspace.getConfiguration("gradle.build.helper");
-  const commandScript = config.get("command") || "gradlew";
   const gradleTasks = config
     .get("tasks", [])
-    .map((task) => `${commandScript} ${task}`);
+    .map((task) => `${task}`);
+
+  // [Custom] 항목 추가
+  gradleTasks.push("[Custom]");
 
   const selectedTask = await vscode.window.showQuickPick(gradleTasks, {
     placeHolder: "Select a Gradle task",
@@ -62,19 +64,23 @@ async function executeGradleCommand(directory) {
   if (!selectedTask) return;
 
   let terminal = vscode.window.terminals.find(
-    (term) => term.name === "GradleHelper"
+    (term) => term.name === "gradle-build-helper"
   );
   if (!terminal) {
-    terminal = vscode.window.createTerminal("GradleHelper");
+    terminal = vscode.window.createTerminal("gradle-build-helper");
   }
 
-  let command = `${commandScript} `;
+  let command = ``;
 
-  if (directory) {
-    command += `:${directory.replace(/\//g, ":")}:`;
-  }
+  if (selectedTask === "[Custom]") {
+    const customTask = await vscode.window.showInputBox({
+      placeHolder: "Enter the custom Gradle task",
+      prompt: "Type the Gradle task you want to execute.",
+    });
 
-  if (selectedTask.includes("with profile")) {
+    if (!customTask) return;
+    command += `${customTask}`;
+  } else if (selectedTask.includes("$profile")) {
     let profiles = config.get("profiles", []);
 
     // Profile 입력 처리
@@ -92,9 +98,13 @@ async function executeGradleCommand(directory) {
 
     if (!selectedProfile) return;
 
-    command += `${selectedTask.replace(`${commandScript} `, "").replace("with profile", `-Pprofile=${selectedProfile}`)}`;
+    command += `${selectedTask.replace("$profile", `-Pprofile=${selectedProfile}`)}`;
   } else {
-    command += `${selectedTask.replace(`${commandScript} `, "")}`;
+    command += `${selectedTask}`;
+  }
+
+  if (directory) {
+    command += ` -p ${directory}`;
   }
 
   terminal.show();

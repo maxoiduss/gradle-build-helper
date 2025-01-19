@@ -30,22 +30,13 @@ Gradle Build Helper is a Visual Studio Code extension that simplifies running Gr
 2. Type and select `Gradle Build Helper`.
 3. Select a directory (if multi-project is enabled).
 4. Choose a Gradle task to execute.
-5. If the selected task includes `with profile`, select one from the available profiles. The selected task will be executed with the profile appended, e.g., `-Pprofile=dev`.
+5. If the selected task includes `$profile`, select one from the available profiles. The selected task will be executed with the profile appended, e.g., `-Pprofile=dev`.
 
 ---
 
 ## Configuration
 
 This extension provides the following configurable options:
-
-### Build Command
-**Property**: `gradle.build.helper.command`
-
-- **Type**: `string`
-- **Default**: `gradlew`
-- **Description**: Default build command used by the extension.
-
----
 
 ### Multi-Project Support
 **Property**: `gradle.build.helper.isMultiProject`
@@ -61,7 +52,7 @@ This extension provides the following configurable options:
 
 - **Type**: `array`
 - **Default**: `["css", "dev"]`
-- **Description**: List of available Gradle profiles. If a task includes `with profile`, you will be prompted to select a profile, and the task will be executed with the selected profile, e.g., `-Pprofile=dev`.
+- **Description**: List of available Gradle profiles. If a task includes `$profile`, you will be prompted to select a profile, and the task will be executed with the selected profile, e.g., `-Pprofile=dev`.
 
 ---
 
@@ -72,15 +63,25 @@ This extension provides the following configurable options:
 - **Default**:
   ```json
   [
-    "build",
-    "clean build",
-    "clean",
-    "clean build with profile",
-    "appRun"
+    "gradlew build",
+    "gradlew clean build",
+    "gradlew build -t",
+    "gradlew clean",
+    "gradlew clean build $profile",
+    "gradlew appRun"
   ]
   ```
-- **Description**: List of available Gradle tasks. Tasks containing `with profile` will require selecting a profile before execution, and the command will be modified to include the profile, e.g., `-Pprofile=dev`.
+- **Description**: List of available Gradle tasks. Tasks containing `$profile` will require selecting a profile before execution, and the command will be modified to include the profile, e.g., `-Pprofile=dev`.
 
+- Note: If you are using MacOS or Linux, replace gradlew with ./gradlew in the task list. For example:
+
+  ```json
+  [
+    "./gradlew build",
+    "./gradlew clean build",
+    ...
+  ]
+  ```
 ---
 
 ### Excluded Directories
@@ -99,14 +100,13 @@ Add the following configuration to your VS Code `settings.json` file to customiz
 {
   "gradle.build.helper.profiles": ["css", "dev", "prod"],
   "gradle.build.helper.tasks": [
-    "build",
-    "clean build",
-    "clean",
-    "clean build with profile",
-    "test",
-    "deploy"
+    "gradlew build",
+    "gradlew clean build",
+    "gradlew clean",
+    "gradlew clean build $profile",
+    "gradlew test",
+    "gradlew deploy"
   ],
-  "gradle.build.helper.command": "./gradlew",
   "gradle.build.helper.isMultiProject": true,
   "gradle.build.helper.excludeDirectory": [".git", "node_modules"]
 }

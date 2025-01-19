@@ -2,7 +2,7 @@
   "name": "gradle-build-helper",
   "displayName": "gradle-build-helper",
   "description": "",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "hwantage",
   "license": "MIT",
   "engines": {
@@ -44,7 +44,7 @@
           "items": {
             "type": "string"
           },
-          "default": ["css", "dev"],
+          "default": ["dev"],
           "description": "Available gradle profile"
         },
         "gradle.build.helper.tasks": {
@@ -53,18 +53,15 @@
             "type": "string"
           },
           "default": [
-            "build",
-            "clean build",
-            "clean",
-            "clean build with profile",
-            "appRun"
+            "gradlew build",
+            "gradlew clean build",
+            "gradlew clean",
+            "gradlew build -t",
+            "gradlew clean build $profile",
+            "gradlew css",
+            "gradlew war"
           ],
           "description": "Available Gradle tasks"
-        },
-        "gradle.build.helper.command": {
-          "type": "string",
-          "default": "gradlew",
-          "description": "Default build command"
         },
         "gradle.build.helper.isMultiProject": {
           "type": "boolean",

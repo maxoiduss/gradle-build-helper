@@ -1,8 +1,8 @@
 {
   "name": "gradle-build-helper",
   "displayName": "gradle-build-helper",
-  "description": "",
-  "version": "1.0.2",
+  "description": "Gradle Build Helper is a Visual Studio Code extension that simplifies running Gradle tasks",
+  "version": "1.0.3",
   "publisher": "hwantage",
   "license": "MIT",
   "engines": {
@@ -58,8 +58,7 @@
             "gradlew clean",
             "gradlew build -t",
             "gradlew clean build $profile",
-            "gradlew css",
-            "gradlew war"
+            "gradlew runApp"
           ],
           "description": "Available Gradle tasks"
         },
@@ -73,7 +72,11 @@
           "items": {
             "type": "string"
           },
-          "default": [],
+          "default": [
+            "gradle",
+            ".gradle",
+            "build"
+          ],
           "description": "Directories to exclude (only if multi-project is enabled)",
           "scope": "resource"
         }

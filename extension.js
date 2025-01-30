@@ -3,7 +3,7 @@ const fs = require("fs");
 
 function activate(context) {
   let disposable = vscode.commands.registerCommand(
-    "gradlebuild.helper",
+    "gradle.build.helper",
     async function () {
       const isMultiProject = vscode.workspace.getConfiguration("gradle.build.helper").get("isMultiProject");
 

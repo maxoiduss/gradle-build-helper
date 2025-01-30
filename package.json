@@ -2,7 +2,7 @@
   "name": "gradle-build-helper",
   "displayName": "gradle-build-helper",
   "description": "Gradle Build Helper is a Visual Studio Code extension that simplifies running Gradle tasks",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "publisher": "hwantage",
   "license": "MIT",
   "engines": {
@@ -31,8 +31,14 @@
   "contributes": {
     "commands": [
       {
-        "command": "gradlebuild.helper",
+        "command": "gradle.build.helper",
         "title": "Gradle build helper"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "gradle.build.helper",
+        "key": "ctrl+shift+`"
       }
     ],
     "configuration": {

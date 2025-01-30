@@ -6,6 +6,14 @@ Gradle Build Helper is a Visual Studio Code extension that simplifies running Gr
 
 ---
 
+1. [Features](#features)
+2. [Installation](#installation)
+3. [Usage](#usage)
+4. [Configuration](#configuration)
+5. [Contribution](#contribution)
+6. [License](#license)
+
+
 ## Features
 
 - Select a Gradle task to execute from a predefined list.
@@ -26,11 +34,14 @@ Gradle Build Helper is a Visual Studio Code extension that simplifies running Gr
 
 ## Usage
 
-1. Open the Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P` on macOS).
-2. Type and select `Gradle Build Helper`.
-3. Select a directory (if multi-project is enabled).
-4. Choose a Gradle task to execute.
-5. If the selected task includes `$profile`, select one from the available profiles. The selected task will be executed with the profile appended, e.g., `-Pprofile=dev`.
+1. Open the Command Palette (`Ctrl+Shift+p` or `Cmd+Shift+P` on macOS).
+2. Type and select `Gradle Build Helper` (command: `gradle.build.helper`).
+3. Alternatively, use the default shortcut: **Ctrl+Shift+\`** (or **Cmd+Shift+\`** on macOS) to quickly trigger the command.
+4. Select a directory (if multi-project is enabled).
+5. Choose a Gradle task to execute.
+6. If the selected task includes `$profile`, select one from the available profiles. The selected task will be executed with the profile appended, e.g., `-Pprofile=dev`.
+
+![Gradle Build Helper Showcase](https://raw.githubusercontent.com/hwantage/gradle-build-helper/refs/heads/main/images/showcase.gif)
 
 ---
 

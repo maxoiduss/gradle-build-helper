@@ -1,5 +1,6 @@
 const vscode = require("vscode");
 const fs = require("fs");
+const { promises } = require("timers");
 
 function activate(context) {
   let disposable = vscode.commands.registerCommand(
@@ -9,7 +10,9 @@ function activate(context) {
 
       if (isMultiProject) {
         const selectedDir = await selectDirectory();
-        await executeGradleCommand(selectedDir);
+        if (selectDirectory !== undefined) {
+          await executeGradleCommand(selectedDir);
+        }         
       } else {
         await executeGradleCommand();
       }
@@ -20,32 +23,37 @@ function activate(context) {
 }
 
 /**
- * 최상위 프로젝트 직속 하위 디렉토리를 QuickPick에 리스트업
- * @returns {string} 선택한 디렉토리
+ * List the top-level project's direct subdirectories in QuickPick
+ * @returns {string} Selected directory
  */
 async function selectDirectory() {
+  if (vscode.workspace.workspaceFolders === undefined) {
+    vscode.window.showErrorMessage("[gradle-build-helper] Error. No opened folder!")
+    return;
+  }
   const rootPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
   const excludeDirs = vscode.workspace.getConfiguration("gradle.build.helper").get("excludeDirectory", []);
 
-  // 디렉토리 읽기
+  // Read directory
   const subDirs = fs
     .readdirSync(rootPath, { withFileTypes: true })
     .filter(
       (dirent) =>
         dirent.isDirectory() &&
-        !dirent.name.startsWith(".") && // 숨김 디렉토리 제외
-        !excludeDirs.includes(dirent.name) // 제외할 디렉토리 제외
+        !dirent.name.startsWith(".") && // Exclude hidden directories
+        !excludeDirs.includes(dirent.name) // Exclude directories to exclude
     )
     .map((dirent) => dirent.name);
 
-  const options = ["Root Project", ...subDirs];
+  const currentDir = "Current Project in Terminal"
+  const options = [currentDir, ...subDirs];
 
   const selectedDir = await vscode.window.showQuickPick(options, {
     placeHolder: "Select a directory",
-    matchOnDescription: true,
+    matchOnDescription: true
   });
 
-  return selectedDir === "Root Project" ? "" : selectedDir;
+  return selectedDir === currentDir ? "" : selectedDir;
 }
 
 async function executeGradleCommand(directory) {
@@ -54,8 +62,13 @@ async function executeGradleCommand(directory) {
     .get("tasks", [])
     .map((task) => `${task}`);
 
-  // [Custom] 항목 추가
-  gradleTasks.push("[Custom]");
+  // [Custom] Add Item
+  const customWholeTask = "[Custom]";
+  gradleTasks.push(customWholeTask);
+  
+  // [Custom] Add Gradlew Item
+  const customArgTask = "[Gradlew Custom]";
+  gradleTasks.push(customArgTask);
 
   const selectedTask = await vscode.window.showQuickPick(gradleTasks, {
     placeHolder: "Select a Gradle task",
@@ -63,16 +76,17 @@ async function executeGradleCommand(directory) {
 
   if (!selectedTask) return;
 
+  const extensioName = "gradle-build-helper";
   let terminal = vscode.window.terminals.find(
-    (term) => term.name === "gradle-build-helper"
+    (term) => term.name === extensioName
   );
   if (!terminal) {
-    terminal = vscode.window.createTerminal("gradle-build-helper");
+    terminal = vscode.window.createTerminal(extensioName);
   }
 
   let command = ``;
 
-  if (selectedTask === "[Custom]") {
+  if (selectedTask === customWholeTask) {
     const customTask = await vscode.window.showInputBox({
       placeHolder: "Enter the custom Gradle task",
       prompt: "Type the Gradle task you want to execute.",
@@ -80,10 +94,18 @@ async function executeGradleCommand(directory) {
 
     if (!customTask) return;
     command += `${customTask}`;
+  } else if (selectedTask === customArgTask) {
+    const customTask = await vscode.window.showInputBox({
+      placeHolder: "Enter the custom arg for Gradle task",
+      prompt: "Type the arg for Gradle task you want to execute.",
+    });
+
+    if (!customTask) return;
+    command += `gradlew ${customTask}`;
   } else if (selectedTask.includes("$profile")) {
     let profiles = config.get("profiles", []);
 
-    // Profile 입력 처리
+    // Profile Input processing
     let selectedProfile;
     if (profiles.length > 0) {
       selectedProfile = await vscode.window.showQuickPick(profiles, {
@@ -104,9 +126,23 @@ async function executeGradleCommand(directory) {
   }
 
   if (directory) {
-    command += ` -p ${directory}`;
+    command = `cd ${directory}\n${command}`;
   }
 
+  const no_arg = "...";
+  let args = config.get("extrargs", []);
+  args = [no_arg, ...args];
+
+  let selectedExtraArg = await vscode.window.showQuickPick(args, {
+    placeHolder: "Select an extra arg.",
+  });
+
+  if (selectedExtraArg) {
+    if (selectedExtraArg === no_arg) {
+      selectedExtraArg = '';
+    }
+    command += ` ${selectedExtraArg}`;
+  }
   terminal.show();
   terminal.sendText(command);
 }

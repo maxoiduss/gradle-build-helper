@@ -1,6 +1,5 @@
 const vscode = require("vscode");
 const fs = require("fs");
-const { promises } = require("timers");
 
 function activate(context) {
   let disposable = vscode.commands.registerCommand(

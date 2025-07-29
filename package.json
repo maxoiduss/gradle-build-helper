@@ -2,7 +2,7 @@
   "name": "gradle-build-helper",
   "displayName": "gradle-build-helper",
   "description": "Gradle Build Helper is a Visual Studio Code extension that simplifies running Gradle tasks",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "publisher": "hwantage",
   "license": "MIT",
   "engines": {
@@ -25,7 +25,9 @@
     "url": "https://github.com/hwantage/gradle-build-helper/issues"
   },
   "homepage": "https://hwantage.github.io",
-  "activationEvents": ["onStartupFinished"],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./extension.js",
   "icon": "images/gradle.256x188.png",
   "contributes": {
@@ -61,7 +63,9 @@
           "items": {
             "type": "string"
           },
-          "default": ["dev"],
+          "default": [
+            "dev"
+          ],
           "description": "Available gradle profile"
         },
         "gradle.build.helper.tasks": {
@@ -102,19 +106,20 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
-    "compile": "js -p ./",
+    "vscode:prepublish": "npm run lint && npm test",
     "lint": "eslint .",
     "pretest": "npm run lint",
-    "test": "vscode-test"
+    "test": "npm run lint",
+    "package": "vsce package"
   },
   "devDependencies": {
-    "@types/vscode": "^1.89.0",
-    "@types/mocha": "^10.0.6",
+    "@eslint/js": "^9.32.0",
     "@types/node": "20.x",
-    "eslint": "^8.57.0",
-    "typescript": "^5.4.5",
+    "@types/vscode": "^1.89.0",
     "@vscode/test-cli": "^0.0.9",
-    "@vscode/test-electron": "^2.4.0"
-  }
+    "@vscode/test-electron": "^2.4.0",
+    "eslint": "^8.57.0",
+    "globals": "^16.3.0"
+  },
+  "author": ""
 }
